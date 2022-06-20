@@ -1,24 +1,34 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Hidden, Typography } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { Plugin, PluginRenderer } from "@coral-xyz/anchor-ui-renderer";
 import { usePlugins, useTablePlugins, useNavigation } from "@coral-xyz/recoil";
 import type { SearchParamsFor } from "@coral-xyz/recoil";
 import { NAV_COMPONENT_PLUGINS } from "@coral-xyz/common";
+import { getSvgPath } from "figma-squircle";
 
-const ICON_WIDTH = "64px";
+const ICON_WIDTH = 64;
+
+const squircleIconPath = getSvgPath({
+  width: ICON_WIDTH,
+  height: ICON_WIDTH,
+  cornerRadius: 15,
+  cornerSmoothing: 0.8,
+});
 
 const useStyles = makeStyles((theme: any) => ({
   pluginIconRoot: {
-    minWidth: "64px",
+    minWidth: ICON_WIDTH,
     marginLeft: "auto",
     marginRight: "auto",
   },
   pluginIconButton: {
     width: ICON_WIDTH,
     height: ICON_WIDTH,
-    borderRadius: "10px",
-    backgroundColor: theme.custom.colors.nav,
+    // borderRadius: 10,
+    overflow: "hidden",
+    clipPath: `path('${squircleIconPath}')`,
     padding: 0,
+    backgroundColor: theme.custom.colors.nav,
   },
   pluginTitle: {
     fontWeight: 500,
@@ -95,7 +105,6 @@ function PluginIcon({ plugin }: { plugin: Plugin }) {
         <img
           src={plugin.iconUrl}
           style={{
-            borderRadius: "8px",
             width: ICON_WIDTH,
             height: ICON_WIDTH,
           }}
