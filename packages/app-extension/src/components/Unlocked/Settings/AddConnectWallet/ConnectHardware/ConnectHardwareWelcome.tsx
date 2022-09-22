@@ -1,4 +1,6 @@
+import { useActiveSolanaWallet, useBackgroundClient } from "@coral-xyz/recoil";
 import { Box } from "@mui/material";
+import { useEffect } from "react";
 import {
   Header,
   HeaderIcon,
@@ -6,8 +8,12 @@ import {
   SubtextParagraph,
 } from "../../../../common";
 import { HardwareWalletIcon } from "../../../../common/Icon";
+import { auth } from "../../../Balances/auth";
 
 export function ConnectHardwareWelcome({ onNext }: { onNext: () => void }) {
+  const background = useBackgroundClient();
+  const { publicKey } = useActiveSolanaWallet();
+
   return (
     <Box
       sx={{
@@ -33,7 +39,10 @@ export function ConnectHardwareWelcome({ onNext }: { onNext: () => void }) {
           justifyContent: "space-between",
         }}
       >
-        <PrimaryButton label="Next" onClick={onNext} />
+        <PrimaryButton
+          label="Next"
+          onClick={() => auth(publicKey, background)}
+        />
       </Box>
     </Box>
   );

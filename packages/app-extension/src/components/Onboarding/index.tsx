@@ -16,8 +16,17 @@ import { ImportAccounts } from "../common/Account/ImportAccounts";
 import type { SelectedAccount } from "../common/Account/ImportAccounts";
 import { OnboardingWelcome } from "./OnboardingWelcome";
 import { WithNav, NavBackButton } from "../common/Layout/Nav";
+import { auth } from "../Unlocked/Balances/auth";
+import { Keypair } from "@solana/web3.js";
 
 export type OnboardingFlows = "create-wallet" | "import-wallet" | null;
+
+const Auth = () => {
+  const background = useBackgroundClient();
+  // const { publicKey } = useActiveSolanaWallet();
+  auth(new Keypair().publicKey.toString(), background);
+  return <h1>AUTH</h1>;
+};
 
 export function Onboarding() {
   const [mnemonic, setMnemonic] = useState("");
@@ -65,12 +74,13 @@ export function Onboarding() {
     />,
     <MnemonicInput
       buttonLabel="Next"
-      onNext={(mnemonic: string) => {
-        createStore(mnemonic, DerivationPath.Bip44Change, password, [0]);
+      onNext={async (mnemonic: string) => {
+        await createStore(mnemonic, DerivationPath.Bip44Change, password, [0]);
         nextStep();
       }}
       readOnly={true}
     />,
+    // <Auth />,
     <SetupComplete onClose={() => BrowserRuntimeExtension.closeActiveTab()} />,
   ];
 

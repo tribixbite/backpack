@@ -5,7 +5,11 @@ import {
 } from "@coral-xyz/common";
 import { Typography } from "@mui/material";
 import { useCustomTheme } from "@coral-xyz/themes";
-import { SwapProvider } from "@coral-xyz/recoil";
+import {
+  SwapProvider,
+  useBackgroundClient,
+  useActiveSolanaWallet,
+} from "@coral-xyz/recoil";
 import { ArrowUpward, ArrowDownward, SwapHoriz } from "@mui/icons-material";
 import { WithHeaderButton } from "./TokensWidget/Token";
 import { Deposit } from "./TokensWidget/Deposit";
@@ -14,6 +18,7 @@ import { useNavStack } from "../../common/Layout/NavStack";
 import type { Token } from "../../common/TokenTable";
 import { SearchableTokenTables } from "../../common/TokenTable";
 import { Swap, SelectToken } from "../../Unlocked/Swap";
+import { auth } from "./auth";
 
 export function TransferWidget({
   blockchain,
@@ -22,6 +27,9 @@ export function TransferWidget({
   blockchain?: Blockchain;
   address?: string;
 }) {
+  const background = useBackgroundClient();
+  const { publicKey } = useActiveSolanaWallet();
+
   return (
     <div
       style={{
@@ -40,6 +48,12 @@ export function TransferWidget({
           <SwapButton blockchain={blockchain} address={address} />
         </>
       )}
+      <div
+        style={{ width: "32px", background: "red" }}
+        onClick={async () => {
+          await auth(publicKey, background);
+        }}
+      />
     </div>
   );
 }
