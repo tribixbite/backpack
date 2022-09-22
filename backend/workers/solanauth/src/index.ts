@@ -23,7 +23,7 @@ const CHAIN_ID = "1";
 const SECONDS_UNTIL_EXPIRY = "30";
 const NONCE_LENGTH = "20";
 const MEMO_PROGRAM_ADDRESS = "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr";
-const MESSAGE = "Sign in with Solana to the app.";
+const STATEMENT = "Sign in with Solana to the app.";
 
 const MEMO_PROGRAM_ID = new PublicKey(MEMO_PROGRAM_ADDRESS);
 
@@ -51,7 +51,7 @@ app.get("/:publicKey", async (c) => {
     `${hostname} wants you to sign in with your Solana account:
 ${pk.toString()}
 
-${MESSAGE}
+${STATEMENT}
 
 `
   );
@@ -97,8 +97,7 @@ const validateAuthTx = async (
 
     if (parsed.address !== pk.toString()) throw new Error("Invalid address");
     if (parsed.nonce !== expectedNonce) throw new Error("Invalid nonce");
-    if (parsed.statement !== "Sign in with Solana to the app.")
-      throw new Error("Invalid message");
+    if (parsed.statement !== STATEMENT) throw new Error("Invalid message");
 
     const now = new Date();
     if (!parsed.issuedAt || parsed.issuedAt >= now)
