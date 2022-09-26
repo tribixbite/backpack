@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { Box, Typography } from "@mui/material";
 import { useCustomTheme } from "@coral-xyz/themes";
@@ -39,7 +39,8 @@ export function CreatePassword({
     setError(null);
   }, [password, passwordDup]);
 
-  const next = async () => {
+  const next = async (e: FormEvent) => {
+    e.preventDefault();
     if (password.length < 8) {
       setError(PasswordError.TOO_SHORT);
       return;
@@ -53,108 +54,132 @@ export function CreatePassword({
   const isNextDisabled = !checked;
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        justifyContent: "space-between",
-      }}
+    <form
+      onSubmit={next}
+      action="signup-to-try-and-make-1pass-do-something"
+      method="POST"
     >
       <Box
         sx={{
-          marginTop: "24px",
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          justifyContent: "space-between",
         }}
       >
         <Box
           sx={{
-            marginLeft: "24px",
-            marginRight: "24px",
+            marginTop: "24px",
           }}
         >
-          <Header text="Create a password" />
-          <SubtextParagraph style={{ marginTop: "8px", marginBottom: "40px" }}>
-            It should be at least 8 characters.
-            <br />
-            You’ll need this to unlock Backpack.
-          </SubtextParagraph>
+          <Box
+            sx={{
+              marginLeft: "24px",
+              marginRight: "24px",
+            }}
+          >
+            <Header text="Create a password" />
+            <SubtextParagraph
+              style={{ marginTop: "8px", marginBottom: "40px" }}
+            >
+              It should be at least 8 characters.
+              <br />
+              You’ll need this to unlock Backpack.
+            </SubtextParagraph>
+          </Box>
+          <Box
+            sx={{
+              marginLeft: "16px",
+              marginRight: "16px",
+            }}
+          >
+            <label htmlFor="password-field">Password</label>
+            <TextField
+              inputProps={{
+                name: "password",
+                passwordrules: "minlength: 8;",
+                minlength: 8,
+                id: "password-field",
+                autocomplete: "new-password",
+              }}
+              placeholder="Password"
+              type="password"
+              value={password}
+              setValue={setPassword}
+              // rootClass={classes.passwordFieldRoot}
+              isError={error === PasswordError.TOO_SHORT}
+            />
+            <label htmlFor="password-confirmation-field">
+              Password confirmation
+            </label>
+            <TextField
+              inputProps={{
+                name: "password-confirmation",
+                passwordrules: "minlength: 8;",
+                minlength: 8,
+                id: "password-confirmation-field",
+                autocomplete: "new-password",
+              }}
+              placeholder="Confirm Password"
+              type="password"
+              value={passwordDup}
+              setValue={setPasswordDup}
+              // rootClass={classes.passwordFieldRoot}
+              isError={error === PasswordError.NO_MATCH}
+            />
+            {error !== null && (
+              <Typography sx={{ color: theme.custom.colors.negative }}>
+                {
+                  {
+                    [PasswordError.TOO_SHORT]:
+                      "Your password must be at least 8 characters.",
+                    [PasswordError.NO_MATCH]: "Your passwords do not match.",
+                  }[error]
+                }
+              </Typography>
+            )}
+          </Box>
         </Box>
         <Box
           sx={{
             marginLeft: "16px",
             marginRight: "16px",
+            marginBottom: "16px",
           }}
         >
-          <TextField
-            inputProps={{ name: "password" }}
-            placeholder="Password"
-            type="password"
-            value={password}
-            setValue={setPassword}
-            rootClass={classes.passwordFieldRoot}
-            isError={error === PasswordError.TOO_SHORT}
-          />
-          <TextField
-            inputProps={{ name: "password-confirmation" }}
-            placeholder="Confirm Password"
-            type="password"
-            value={passwordDup}
-            setValue={setPasswordDup}
-            rootClass={classes.passwordFieldRoot}
-            isError={error === PasswordError.NO_MATCH}
-          />
-          {error !== null && (
-            <Typography sx={{ color: theme.custom.colors.negative }}>
-              {
-                {
-                  [PasswordError.TOO_SHORT]:
-                    "Your password must be at least 8 characters.",
-                  [PasswordError.NO_MATCH]: "Your passwords do not match.",
-                }[error]
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "30px",
+            }}
+          >
+            <CheckboxForm
+              checked={checked}
+              setChecked={setChecked}
+              label={
+                <>
+                  I agree to the{" "}
+                  <span
+                    onClick={() => window.open("https://backpack.app/terms")}
+                    style={{ color: theme.custom.colors.brandColor }}
+                  >
+                    terms of service
+                  </span>
+                </>
               }
-            </Typography>
-          )}
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          marginLeft: "16px",
-          marginRight: "16px",
-          marginBottom: "16px",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: "30px",
-          }}
-        >
-          <CheckboxForm
-            checked={checked}
-            setChecked={setChecked}
-            label={
-              <>
-                I agree to the{" "}
-                <span
-                  onClick={() => window.open("https://backpack.app/terms")}
-                  style={{ color: theme.custom.colors.brandColor }}
-                >
-                  terms of service
-                </span>
-              </>
-            }
+            />
+          </Box>
+          <PrimaryButton
+            disabled={isNextDisabled}
+            label="Next"
+            type="submit"
+            buttonLabelStyle={{
+              fontWeight: 600,
+            }}
           />
         </Box>
-        <PrimaryButton
-          disabled={isNextDisabled}
-          label="Next"
-          onClick={next}
-          buttonLabelStyle={{
-            fontWeight: 600,
-          }}
-        />
       </Box>
-    </Box>
+    </form>
   );
 }
