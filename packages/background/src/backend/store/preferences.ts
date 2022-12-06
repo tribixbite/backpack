@@ -52,6 +52,10 @@ export async function getWalletData_DEPRECATED(): Promise<WalletData> {
   return data;
 }
 
+export async function setWalletData_DEPRECATED(data: WalletData) {
+  await LocalStorageDb.set(STORE_KEY_WALLET_DATA, data);
+}
+
 function key(uuid: string): string {
   return `${STORE_KEY_WALLET_DATA}:${uuid}`;
 }
