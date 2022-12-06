@@ -11,8 +11,6 @@ const STORE_KEY_WALLET_DATA = "wallet-data";
  * Note: this data is not encrypted on the client.
  */
 export type WalletData = {
-  // Deprecated. Don't use this.
-  username?: string;
   autoLockSecs: number;
   approvedOrigins: Array<string>;
   enabledBlockchains: Array<Blockchain>;
@@ -44,6 +42,14 @@ export async function getWalletDataForUser(uuid: string): Promise<WalletData> {
 
 export async function setWalletDataForUser(uuid: string, data: WalletData) {
   await LocalStorageDb.set(key(uuid), data);
+}
+
+export async function getWalletData_DEPRECATED(): Promise<WalletData> {
+  const data = await LocalStorageDb.get(STORE_KEY_WALLET_DATA);
+  if (data === undefined) {
+    throw new Error("wallet data is undefined");
+  }
+  return data;
 }
 
 function key(uuid: string): string {
