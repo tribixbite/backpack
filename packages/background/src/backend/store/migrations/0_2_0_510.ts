@@ -15,7 +15,7 @@ const logger = getLogger("migrations/0_2_0_510");
 
 // Migration: 0.2.0-latest-beta-510.
 //
-// We make a best effort to migrate gracefully. This is neither atomic and nor
+// We make a best effort to migrate gracefully. This is neither atomic nor
 // idempotent.
 //
 // In the event of failure, the user must re-onboard.
@@ -54,6 +54,10 @@ async function migrateWalletData_0_2_0_510(uuid: string, username: string) {
   await setWalletData_DEPRECATED(undefined);
 }
 
+// Migration:
+//
+//   - moves the keyring store from the older single user format to the new
+//     multi user format.
 export async function migrateKeyringStore_0_2_0_510(
   uuid: string,
   username: string,
