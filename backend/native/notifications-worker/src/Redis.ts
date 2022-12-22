@@ -1,5 +1,5 @@
-import type { RedisClientType } from "redis";
-import { createClient } from "redis";
+import type { RedisClientType } from "@redis/client";
+import { createClient } from "@redis/client";
 
 import { NOTIFICATIONS_QUEUE, REDIS_URL } from "./config";
 
